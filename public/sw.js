@@ -1,6 +1,6 @@
 // public/sw.js
 // Simple service worker for Tactical Compass PWA
-const CACHE_NAME = 'tactical-compass-v1';
+const CACHE_NAME = 'tactical-compass-v2';
 const ASSETS = [
   '/',
   '/src/index.html',
@@ -30,6 +30,17 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request))
+    fetch(event.request)
+      .then(response => {
+        // Clone the response before caching it
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
 });
