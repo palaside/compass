@@ -104,7 +104,7 @@ export function CompassView({
   const discTheme = dayNightMode === 'NIGHT' ? 'tactical-night' : 'military-printed';
 
   // North Reference: True North (TN) vs Magnetic North (MN)
-  const [northRef, setNorthRef] = useState<NorthReference>('TRUE_NORTH');
+  const [northRef, setNorthRef] = useState<NorthReference>('MAGNETIC_NORTH');
   const magneticDeclination = useMemo(() => {
     return -0.45; // Approximate WMM for Thailand / SE Asia
   }, []);
@@ -725,13 +725,13 @@ export function CompassView({
                 
                 {/* 1. เส้น OL (OL Bearing / Azimuth Vector) - Cyan/Neon Line */}
                 {(() => {
-                  const rad = ((angleBearingDeg - 90) * Math.PI) / 180;
+                  const rad = ((angleOLDeg - 90) * Math.PI) / 180;
                   const x = 184 * Math.cos(rad);
                   const y = 184 * Math.sin(rad);
                   const lx = 145 * Math.cos(rad);
                   const ly = 145 * Math.sin(rad);
                   return (
-                    <g key="bearing-line">
+                    <g key="ol-bearing-line">
                       <line
                         x1={0}
                         y1={0}
@@ -744,7 +744,7 @@ export function CompassView({
                       />
                       <circle cx={x} cy={y} r="3" fill="#00e5ff" />
                       {/* Label Badge */}
-                      <g transform={`translate(${lx}, ${ly})`}>
+                      <g transform={`translate(${lx}, ${ly}) rotate(${angleOLDeg > 90 && angleOLDeg < 270 ? angleOLDeg + 180 : angleOLDeg})`}>
                         <rect x="-24" y="-7" width="48" height="14" rx="2" fill="#002b33" stroke="#00e5ff" strokeWidth="0.8" />
                         <text x="0" y="3" fill="#00e5ff" fontSize="6.5" fontWeight="bold" textAnchor="middle">
                           OL {v1}
@@ -790,13 +790,13 @@ export function CompassView({
 
                 {/* 3. เส้น ค่าตั้งกล้อง (Aiming Circle Deflection / Instrument Setting Vector) - Glowing Light Green Line */}
                 {(() => {
-                  const rad = ((angleOLDeg - 90) * Math.PI) / 180;
+                  const rad = ((angleBearingDeg - 90) * Math.PI) / 180;
                   const x = 184 * Math.cos(rad);
                   const y = 184 * Math.sin(rad);
                   const lx = 145 * Math.cos(rad);
                   const ly = 145 * Math.sin(rad);
                   return (
-                    <g key="ol-line">
+                    <g key="instrument-line">
                       <line
                         x1={0}
                         y1={0}
@@ -809,7 +809,7 @@ export function CompassView({
                       />
                       <circle cx={x} cy={y} r="4" fill="#3be099" stroke="#041207" strokeWidth="1" />
                       {/* Label Badge */}
-                      <g transform={`translate(${lx}, ${ly}) rotate(${angleOLDeg > 90 && angleOLDeg < 270 ? angleOLDeg + 180 : angleOLDeg})`}>
+                      <g transform={`translate(${lx}, ${ly}) rotate(${angleBearingDeg > 90 && angleBearingDeg < 270 ? angleBearingDeg + 180 : angleBearingDeg})`}>
                         <rect x="-30" y="-7" width="60" height="14" rx="2" fill="#1b2f21" stroke="#3be099" strokeWidth="1" />
                         <text x="0" y="3" fill="#3be099" fontSize="6.5" fontWeight="bold" textAnchor="middle">
                           ค่าตั้งกล้อง {calculatedOL}
