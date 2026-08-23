@@ -171,7 +171,9 @@ export function CompassView({
   };
   
   // Sensor permission state for mobile browsers (iOS 13+ User Gesture)
-  const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+  const [permissionGranted, setPermissionGranted] = useState<boolean>(() => {
+    return localStorage.getItem('compass_permission_granted') === 'true';
+  });
   const [permissionStatusStr, setPermissionStatusStr] = useState<string>('NOT_REQUESTED');
 
   const requestSensorPermission = async () => {
@@ -188,9 +190,11 @@ export function CompassView({
         if (response === 'granted') {
           setPermissionGranted(true);
           setUseManualSlider(false);
+          localStorage.setItem('compass_permission_granted', 'true');
           window.dispatchEvent(new Event('compass-permission-granted'));
         } else {
           setPermissionGranted(false);
+          localStorage.setItem('compass_permission_granted', 'false');
           alert(`ไม่อนุญาตสิทธิ์เซนเซอร์ สถานะ: ${response} (อาจต้องไปล้างแคชใน Setting Safari)`);
         }
       } else {
@@ -198,6 +202,7 @@ export function CompassView({
         setPermissionStatusStr('FALLBACK_NO_API');
         setPermissionGranted(true);
         setUseManualSlider(false);
+        localStorage.setItem('compass_permission_granted', 'true');
         window.dispatchEvent(new Event('compass-permission-granted'));
         alert('เริ่มต้นใช้งานเซนเซอร์เข็มทิศโดยตรง (ไม่ต้องขอสิทธิ์ผ่าน API)');
       }
@@ -302,11 +307,11 @@ export function CompassView({
       {/* ========================================================================= */}
       {/* A. TOP CALCULATION BAR (คอนโทรลเลอร์คำนวณกล้องกองร้อย - 100% ตาม APPP.png) */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#121413]/95 backdrop-blur-md border-b border-[#233527] px-3 py-2.5 sm:px-6 shadow-2xl">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <div className="relative z-20 w-full bg-[#121413]/95 backdrop-blur-md border-b border-[#233527] px-2 py-2 sm:px-6 shadow-2xl">
+        <div className="max-w-4xl mx-auto flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-3">
           
           {/* Left Column: Dropdown + Inputs */}
-          <div className="flex flex-col gap-1.5 flex-1 max-w-xl">
+          <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
             
             {/* Top Row: Dropdown selector box (Grey container, black text, triangle arrow) */}
             <div className="flex items-center">
@@ -509,7 +514,7 @@ export function CompassView({
         </div>
 
         {/* Mobile Sub-toolbar for Tactical Lines, True North & Manual Sim */}
-        <div className="flex sm:hidden items-center justify-between mt-2 pt-1.5 border-t border-gray-800 text-xs gap-1">
+        <div className="flex sm:hidden flex-wrap items-center justify-center mt-2 pt-1.5 border-t border-gray-800 text-xs gap-1.5">
           <button
             type="button"
             onClick={() => {
@@ -523,7 +528,7 @@ export function CompassView({
             }`}
           >
             {showTacticalLines ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-            <span>เส้นยุทธวิธี OL/ยิง/ค่าตั้งกล้อง</span>
+            <span>เส้นยุทธวิธี</span>
           </button>
 
           <button
@@ -620,7 +625,7 @@ export function CompassView({
       {/* ========================================================================= */}
       {/* C. CENTERPIECE COMPASS & PITCH DIAL HUD (Matching APPP.png 100%)          */}
       {/* ========================================================================= */}
-      <div className="relative z-10 my-auto flex flex-col items-center justify-center py-1 sm:py-2 px-2">
+      <div className="relative z-10 my-auto flex flex-col items-center justify-center py-1 sm:py-2 px-2 w-full">
         
         {/* Tactical Dial Stage SVG */}
         <div 
@@ -629,7 +634,7 @@ export function CompassView({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className="relative w-[345px] h-[345px] sm:w-[470px] sm:h-[470px] flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
+          className="relative w-[92vw] max-w-[420px] aspect-square flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
           title="แตะและลากหมุนวงกลมเข็มทิศได้ทันที"
         >
           
