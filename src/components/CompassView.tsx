@@ -717,9 +717,37 @@ export function CompassView({
               />
             </g>
 
-            {/* =============================================================== */}
-            {/* TACTICAL VECTORS & LINES (เส้น ค่าตั้งกล้อง, ทิศทางยิง, OL)     */}
-            {/* =============================================================== */}
+            {/* Small Tactical Glyphs scattered inside circle (Matching APPP.png exactly) */}
+            <g stroke="#10b981" strokeWidth="1" fill="none" opacity="0.65">
+              {/* Small Rectangle top center-left */}
+              <rect x="-45" y="-120" width="16" height="7" rx="1" />
+              {/* Small Cross left */}
+              <path d="M -115 -15 L -105 -15 M -110 -20 L -110 -10" />
+              {/* Small X bottom left */}
+              <path d="M -100 45 L -92 53 M -92 45 L -100 53" />
+              {/* Small Circle right */}
+              <circle cx="80" cy="20" r="3" />
+              {/* Small Y Prong upper right */}
+              <path d="M 85 -70 L 90 -63 L 95 -70 M 90 -63 L 90 -55" />
+            </g>
+          </svg>
+
+          {/* =============================================================== */}
+          {/* TACTICAL VECTORS & LINES (STATIC RELATIVE TO SCREEN/MAP)        */}
+          {/* =============================================================== */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="-220 -220 440 440"
+          >
+            <defs>
+              <filter id="hudNeonFixed" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="1.2" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
             {showTacticalLines && (
               <g className="tactical-lines-group">
                 
@@ -805,7 +833,7 @@ export function CompassView({
                         stroke="#3be099"
                         strokeWidth="2.4"
                         strokeOpacity="0.95"
-                        filter="url(#hudNeon)"
+                        filter="url(#hudNeonFixed)"
                       />
                       <circle cx={x} cy={y} r="4" fill="#3be099" stroke="#041207" strokeWidth="1" />
                       {/* Label Badge */}
@@ -820,20 +848,6 @@ export function CompassView({
                 })()}
               </g>
             )}
-
-            {/* Small Tactical Glyphs scattered inside circle (Matching APPP.png exactly) */}
-            <g stroke="#10b981" strokeWidth="1" fill="none" opacity="0.65">
-              {/* Small Rectangle top center-left */}
-              <rect x="-45" y="-120" width="16" height="7" rx="1" />
-              {/* Small Cross left */}
-              <path d="M -115 -15 L -105 -15 M -110 -20 L -110 -10" />
-              {/* Small X bottom left */}
-              <path d="M -100 45 L -92 53 M -92 45 L -100 53" />
-              {/* Small Circle right */}
-              <circle cx="80" cy="20" r="3" />
-              {/* Small Y Prong upper right */}
-              <path d="M 85 -70 L 90 -63 L 95 -70 M 90 -63 L 90 -55" />
-            </g>
           </svg>
 
           {/* ================================================================= */}
