@@ -205,9 +205,9 @@ export default function App() {
     setupListeners();
 
     const onPermissionGranted = () => {
-      // Re-attach on iOS after permission is granted
+      // Re-attach on iOS synchronously after permission is granted
       removeListeners();
-      setTimeout(setupListeners, 100);
+      setupListeners();
     };
     
     window.addEventListener('compass-permission-granted', onPermissionGranted);

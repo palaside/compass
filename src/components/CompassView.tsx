@@ -256,6 +256,8 @@ export function CompassView({
     }
   };
 
+  const debugText = `DEBUG - Sensor: ${orientation.isDeviceSensor ? 'YES' : 'NO'} | H: ${Math.round(orientation.heading)} P: ${Math.round(orientation.pitch)} R: ${Math.round(orientation.roll)} | Slider: ${useManualSlider ? 'YES' : 'NO'}`;
+
   return (
     <div className="relative w-full h-full bg-[#020703] text-[#CEDE62] flex flex-col justify-between overflow-hidden font-mono select-none">
       
@@ -264,6 +266,10 @@ export function CompassView({
       {/* ========================================================================= */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <NakhonSawanTacticalMap center={[currentPosition.lat, currentPosition.lng]} onPositionChange={onPositionChange} dayNightMode={dayNightMode} className={`w-full h-full filter ${dayNightMode === 'NIGHT' ? 'brightness-[100%] contrast-100' : 'brightness-[105%] contrast-[102%]'}`} opacity={1.0} />
+      </div>
+
+      <div className="absolute top-2 left-2 z-50 bg-black/80 text-white text-[10px] p-1 font-mono pointer-events-none">
+        {debugText}
       </div>
 
       {/* ========================================================================= */}
