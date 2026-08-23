@@ -526,6 +526,20 @@ export function CompassView({
             <Sliders className="w-3 h-3" />
             <span>{useManualSlider ? 'ปิดจำลอง' : 'จำลอง'}</span>
           </button>
+
+          {/* Mobile Sensor Permission Button */}
+          <button
+            type="button"
+            onClick={requestSensorPermission}
+            className={`px-1.5 py-0.5 rounded text-[10px] font-bold border flex items-center gap-0.5 ${
+              permissionGranted
+                ? 'bg-emerald-950 text-emerald-400 border-emerald-500'
+                : 'bg-amber-950/80 text-amber-300 border-amber-500/80'
+            }`}
+          >
+            <CompassIcon className="w-3 h-3" />
+            <span>{permissionGranted ? 'เปิดแล้ว' : 'ขอสิทธิ์เซนเซอร์'}</span>
+          </button>
         </div>
 
         {/* Fallback Manual Heading Slider when enabled */}
