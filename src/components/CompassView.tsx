@@ -176,30 +176,31 @@ export function CompassView({
   const requestSensorPermission = async () => {
     playTacticalClick(soundEnabled);
     try {
-      // Clear previous permission cached state
       setPermissionGranted(false);
-
-      const DeviceOrientation = DeviceOrientationEvent as unknown as {
+      const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<string>;
       };
 
-      if (typeof DeviceOrientation?.requestPermission === 'function') {
+      if (DeviceOrientation && typeof DeviceOrientation.requestPermission === 'function') {
         const response = await DeviceOrientation.requestPermission();
         if (response === 'granted') {
           setPermissionGranted(true);
           setUseManualSlider(false);
           window.dispatchEvent(new Event('compass-permission-granted'));
-          alert('อนุญาตสิทธิ์เซนเซอร์เข็มทิศสำเร็จ (DeviceOrientation Granted) - สะเกลเข็มทิศจะหมุนตามทิศทางจริงของอุปกรณ์');
         } else {
           setPermissionGranted(false);
-          alert(`ไม่อนุญาตสิทธิ์เซนเซอร์เข็มทิศ สถานะ: ${response}`);
+          alert(`ไม่อนุญาตสิทธิ์เซนเซอร์ สถานะ: ${response}`);
         }
       } else {
-        alert('อุปกรณ์หรือเบราว์เซอร์นี้ไม่รองรับการขอสิทธิ์ผ่าน API (DeviceOrientationEvent.requestPermission ไม่พบ) หรือเปิดใช้งานเซนเซอร์อยู่แล้ว');
+        // Fallback for non-iOS or older iOS where it doesn't require explicit permission API
+        setPermissionGranted(true);
+        setUseManualSlider(false);
+        window.dispatchEvent(new Event('compass-permission-granted'));
+        alert('เริ่มต้นใช้งานเซนเซอร์เข็มทิศโดยตรง (ไม่ต้องขอสิทธิ์ผ่าน API)');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Sensor Permission Error:', err);
-      alert('เกิดข้อผิดพลาดในการขอสิทธิ์เซนเซอร์เข็มทิศ กรุณาลองใหม่อีกครั้ง');
+      alert(`เกิดข้อผิดพลาดในการขอสิทธิ์: ${err.message}`);
     }
   };
   
