@@ -175,6 +175,7 @@ export function CompassView({
   const [permissionStatusStr, setPermissionStatusStr] = useState<string>('NOT_REQUESTED');
 
   const requestSensorPermission = async () => {
+    alert('ปุ่มถูกกดแล้ว! กำลังเริ่มขอสิทธิ์เซนเซอร์...');
     try {
       setPermissionGranted(false);
       setPermissionStatusStr('REQUESTING...');
@@ -276,6 +277,20 @@ export function CompassView({
       <div className="absolute top-2 left-2 z-50 bg-black/80 text-white text-[10px] p-1 font-mono pointer-events-none">
         {debugText}
       </div>
+
+      {/* GIANT PERMISSION OVERLAY FOR FOOLPROOF CLICKING */}
+      {!permissionGranted && (
+        <div className="absolute inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-auto">
+          <button
+            type="button"
+            onClick={requestSensorPermission}
+            className="px-8 py-6 bg-emerald-600 text-white font-black text-2xl rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.8)] border-4 border-emerald-400 animate-pulse flex flex-col items-center gap-4"
+          >
+            <CompassIcon className="w-16 h-16" />
+            <span>กดตรงนี้เพื่อเปิดเซนเซอร์!</span>
+          </button>
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* A. TOP CALCULATION BAR (คอนโทรลเลอร์คำนวณกล้องกองร้อย - 100% ตาม APPP.png) */}
