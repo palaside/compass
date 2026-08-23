@@ -175,7 +175,6 @@ export function CompassView({
   const [permissionStatusStr, setPermissionStatusStr] = useState<string>('NOT_REQUESTED');
 
   const requestSensorPermission = async () => {
-    alert('ปุ่มถูกกดแล้ว! กำลังเริ่มขอสิทธิ์เซนเซอร์...');
     try {
       setPermissionGranted(false);
       setPermissionStatusStr('REQUESTING...');
@@ -274,21 +273,29 @@ export function CompassView({
         <NakhonSawanTacticalMap center={[currentPosition.lat, currentPosition.lng]} onPositionChange={onPositionChange} dayNightMode={dayNightMode} className={`w-full h-full filter ${dayNightMode === 'NIGHT' ? 'brightness-[100%] contrast-100' : 'brightness-[105%] contrast-[102%]'}`} opacity={1.0} />
       </div>
 
-      <div className="absolute top-2 left-2 z-50 bg-black/80 text-white text-[10px] p-1 font-mono pointer-events-none">
-        {debugText}
-      </div>
-
-      {/* GIANT PERMISSION OVERLAY FOR FOOLPROOF CLICKING */}
+      {/* TACTICAL STARTUP / SENSOR INITIALIZATION OVERLAY */}
       {!permissionGranted && (
-        <div className="absolute inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-auto">
-          <button
-            type="button"
-            onClick={requestSensorPermission}
-            className="px-8 py-6 bg-emerald-600 text-white font-black text-2xl rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.8)] border-4 border-emerald-400 animate-pulse flex flex-col items-center gap-4"
-          >
-            <CompassIcon className="w-16 h-16" />
-            <span>กดตรงนี้เพื่อเปิดเซนเซอร์!</span>
-          </button>
+        <div className="absolute inset-0 z-[9999] flex flex-col items-center justify-center bg-[#020503]/90 backdrop-blur-md pointer-events-auto">
+          <div className="flex flex-col items-center max-w-sm w-full p-6 text-center">
+            <div className="w-20 h-20 bg-[#1b2f21] border border-[#CEDE62]/30 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(206,222,98,0.15)] relative overflow-hidden">
+              <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+              <CompassIcon className="w-10 h-10 text-[#CEDE62]" />
+            </div>
+            
+            <h2 className="text-xl font-black text-white tracking-widest mb-2">ARTY COMPASS</h2>
+            <p className="text-sm text-gray-400 mb-8 leading-relaxed">
+              ระบบต้องการสิทธิ์เข้าถึงเซนเซอร์เข็มทิศเพื่อการทำงานที่แม่นยำ
+            </p>
+            
+            <button
+              type="button"
+              onClick={requestSensorPermission}
+              className="w-full py-4 bg-[#1b2f21] hover:bg-[#23422d] active:scale-95 transition-all text-[#CEDE62] font-bold text-lg rounded border border-[#CEDE62]/50 flex items-center justify-center gap-3 tracking-wide"
+            >
+              <Crosshair className="w-5 h-5" />
+              <span>เริ่มใช้งานระบบ</span>
+            </button>
+          </div>
         </div>
       )}
 
