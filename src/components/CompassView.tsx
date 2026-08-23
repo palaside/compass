@@ -172,33 +172,37 @@ export function CompassView({
   
   // Sensor permission state for mobile browsers (iOS 13+ User Gesture)
   const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+  const [permissionStatusStr, setPermissionStatusStr] = useState<string>('NOT_REQUESTED');
 
   const requestSensorPermission = async () => {
-    playTacticalClick(soundEnabled);
     try {
       setPermissionGranted(false);
+      setPermissionStatusStr('REQUESTING...');
       const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<string>;
       };
 
       if (DeviceOrientation && typeof DeviceOrientation.requestPermission === 'function') {
         const response = await DeviceOrientation.requestPermission();
+        setPermissionStatusStr(`API_RES: ${response}`);
         if (response === 'granted') {
           setPermissionGranted(true);
           setUseManualSlider(false);
           window.dispatchEvent(new Event('compass-permission-granted'));
         } else {
           setPermissionGranted(false);
-          alert(`ไม่อนุญาตสิทธิ์เซนเซอร์ สถานะ: ${response}`);
+          alert(`ไม่อนุญาตสิทธิ์เซนเซอร์ สถานะ: ${response} (อาจต้องไปล้างแคชใน Setting Safari)`);
         }
       } else {
         // Fallback for non-iOS or older iOS where it doesn't require explicit permission API
+        setPermissionStatusStr('FALLBACK_NO_API');
         setPermissionGranted(true);
         setUseManualSlider(false);
         window.dispatchEvent(new Event('compass-permission-granted'));
         alert('เริ่มต้นใช้งานเซนเซอร์เข็มทิศโดยตรง (ไม่ต้องขอสิทธิ์ผ่าน API)');
       }
     } catch (err: any) {
+      setPermissionStatusStr(`ERROR: ${err.message}`);
       console.error('Sensor Permission Error:', err);
       alert(`เกิดข้อผิดพลาดในการขอสิทธิ์: ${err.message}`);
     }
@@ -257,7 +261,7 @@ export function CompassView({
     }
   };
 
-  const debugText = `DEBUG - Sensor: ${orientation.isDeviceSensor ? 'YES' : 'NO'} | H: ${Math.round(orientation.heading)} P: ${Math.round(orientation.pitch)} R: ${Math.round(orientation.roll)} | Slider: ${useManualSlider ? 'YES' : 'NO'}`;
+  const debugText = `DEBUG - Sensor: ${orientation.isDeviceSensor ? 'YES' : 'NO'} | H: ${Math.round(orientation.heading)} P: ${Math.round(orientation.pitch)} R: ${Math.round(orientation.roll)} | Slider: ${useManualSlider ? 'YES' : 'NO'} | Status: ${permissionStatusStr}`;
 
   return (
     <div className="relative w-full h-full bg-[#020703] text-[#CEDE62] flex flex-col justify-between overflow-hidden font-mono select-none">
