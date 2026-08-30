@@ -1,0 +1,6 @@
+{
+  "name": "ARTY Compass",
+  "description": "Advanced tactical artillery compass and rugged off-road C2 navigation with Augmented Reality (AR) HUD.",
+  "requestFramePermissions": ["camera", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
