@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tactical Compass</title>
+  <link rel="manifest" href="../public/manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="../public/icons/icon-192.png" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div class="app-container">
+    <div class="compass-wrapper">
+      <img id="compass" src="assets/compass.png" alt="Compass" />
+      <div class="degree-label" id="degree">0°</div>
+    </div>
+    <button id="permissionBtn" class="btn hidden">Enable Motion &amp; Orientation</button>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('../public/sw.js');
+    }
+  </script>
+  <script src="js/compass.js"></script>
+</body>
+</html>

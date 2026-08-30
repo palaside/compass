@@ -1,0 +1,52 @@
+/* src/css/main.css */
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #111111;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+}
+
+.app-container {
+  text-align: center;
+}
+
+.compass-wrapper {
+  position: relative;
+  width: 719px;
+  height: 828px;
+  margin: 0 auto;
+}
+
+#compass {
+  width: 100%;
+  height: auto;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease-out;
+}
+
+.degree-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  pointer-events: none;
+}
+
+#permissionBtn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #28a745;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
