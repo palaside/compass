@@ -1,0 +1,4 @@
+#|
+$JSON
+{"authURL":["ai2a.appinventor.mit.edu"],"YaVersion":"237","Source":"Form","Properties":{"$Name":"Screen1","$Type":"Form","$Version":"32","ActionBar":"True","AlignHorizontal":"3","AlignVertical":"2","AppName":"compass","ScreenOrientation":"portrait","Title":"Screen1","TitleVisible":"False","Uuid":"0","$Components":[{"$Name":"Canvas1","$Type":"Canvas","$Version":"15","Height":"-2","Width":"-2","Uuid":"-1748936576","$Components":[{"$Name":"compasss","$Type":"ImageSprite","$Version":"11","Height":"719","Width":"828","Picture":"compasss.png","Uuid":"1404194885","X":"11","Y":"70"}]},{"$Name":"Notifier1","$Type":"Notifier","$Version":"7","Uuid":"-1890428674"},{"$Name":"OrientationSensor1","$Type":"OrientationSensor","$Version":"2","Uuid":"645424698"},{"$Name":"LocationSensor1","$Type":"LocationSensor","$Version":"4","Uuid":"1243444211"}]}}
+|#
