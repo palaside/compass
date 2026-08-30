@@ -78,7 +78,6 @@ export default function App() {
   // Modals
   const [isOfflineMapsModalOpen, setIsOfflineMapsModalOpen] = useState<boolean>(false);
   const [isSOSModalOpen, setIsSOSModalOpen] = useState<boolean>(false);
-  const [isCraterAnalysisOpen, setIsCraterAnalysisOpen] = useState<boolean>(false);
 
   // Tactical Artillery Parameters (Shared Direction of Fire / ทิศทางยิง)
   const [directionOfFire, setDirectionOfFire] = useState<number>(1600);
@@ -277,7 +276,6 @@ export default function App() {
         onToggleRecordTrack={() => setIsRecordingTrack(!isRecordingTrack)}
         onOpenOfflineMaps={() => setIsOfflineMapsModalOpen(true)}
         onOpenSOS={() => setIsSOSModalOpen(true)}
-        onOpenCraterAnalysis={() => setIsCraterAnalysisOpen(true)}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
       />
@@ -372,6 +370,21 @@ export default function App() {
             onManualRollChange={handleManualRoll}
           />
         )}
+
+        {mode === 'CRATER_ANALYSIS' && (
+          <div className="absolute inset-0 z-[35] bg-black">
+            <CraterAnalysisView
+              isOpen={true}
+              onClose={() => setMode('AR')}
+              currentPosition={currentPosition}
+              orientation={orientation}
+              solarInfo={solarInfo}
+              waypoints={waypoints}
+              activeWaypoint={activeWaypoint}
+              soundEnabled={soundEnabled}
+            />
+          </div>
+        )}
       </main>
 
       {/* 3. MODALS (OFFLINE MAPS & SOS BEACON) */}
@@ -385,17 +398,6 @@ export default function App() {
         isOpen={isSOSModalOpen}
         onClose={() => setIsSOSModalOpen(false)}
         currentPosition={currentPosition}
-        soundEnabled={soundEnabled}
-      />
-
-      <CraterAnalysisView
-        isOpen={isCraterAnalysisOpen}
-        onClose={() => setIsCraterAnalysisOpen(false)}
-        currentPosition={currentPosition}
-        orientation={orientation}
-        solarInfo={solarInfo}
-        waypoints={waypoints}
-        activeWaypoint={activeWaypoint}
         soundEnabled={soundEnabled}
       />
     </div>

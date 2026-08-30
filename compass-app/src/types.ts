@@ -1,4 +1,4 @@
-export type HUDMode = 'AR' | 'COMPASS' | 'MAP' | 'REPORT' | 'GAUGES' | 'CELESTIAL' | 'CLINOMETER';
+export type HUDMode = 'AR' | 'COMPASS' | 'MAP' | 'REPORT' | 'GAUGES' | 'CELESTIAL' | 'CLINOMETER' | 'CRATER_ANALYSIS';
 
 export type ARFilter = 'STANDARD' | 'NVG_GREEN' | 'THERMAL' | 'AMBER';
 

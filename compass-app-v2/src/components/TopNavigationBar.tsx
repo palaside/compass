@@ -28,7 +28,6 @@ interface TopNavigationBarProps {
   onOpenWaypoints?: () => void;
   onOpenOfflineMaps: () => void;
   onOpenSOS: () => void;
-  onOpenCraterAnalysis: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
 }
@@ -42,7 +41,6 @@ export function TopNavigationBar({
   onToggleRecordTrack,
   onOpenOfflineMaps,
   onOpenSOS,
-  onOpenCraterAnalysis,
   soundEnabled,
   onToggleSound,
 }: TopNavigationBarProps) {
@@ -54,6 +52,7 @@ export function TopNavigationBar({
     { id: 'GAUGES', label: 'มาตรวัด (Cockpit)', icon: <Gauge className="w-3.5 h-3.5" /> },
     { id: 'CELESTIAL', label: 'ดวงดาว (Celestial)', icon: <Sparkles className="w-3.5 h-3.5" /> },
     { id: 'CLINOMETER', label: 'วัดเอียง 4x4 (Tilt)', icon: <ShieldAlert className="w-3.5 h-3.5" /> },
+    { id: 'CRATER_ANALYSIS', label: 'วิเคราะห์หลุมระเบิด', icon: <Target className="w-3.5 h-3.5" /> },
   ];
 
   return (
@@ -101,21 +100,7 @@ export function TopNavigationBar({
               </button>
             );
           })}
-          <button
-            type="button"
-            onClick={() => {
-              onOpenCraterAnalysis();
-              playTacticalClick(soundEnabled);
-            }}
-            className="px-2 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all text-gray-400 hover:text-gray-200 hover:bg-[#0c1910]"
-            title="ระบบวิเคราะห์หลุมระเบิด 360°"
-          >
-            <Target className="w-3.5 h-3.5" />
-            <span className="truncate">วิเคราะห์หลุมระเบิด</span>
-          </button>
         </div>
-
-
 
       </div>
     </header>
