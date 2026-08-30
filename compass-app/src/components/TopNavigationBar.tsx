@@ -108,10 +108,10 @@ export function TopNavigationBar({
               onOpenCraterAnalysis();
               playTacticalClick(soundEnabled);
             }}
-            className="px-2.5 py-1.5 bg-orange-950/80 hover:bg-orange-900 text-orange-200 border border-orange-600/70 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-md transition-colors shrink-0"
+            className="px-2 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all text-gray-400 hover:text-gray-200 hover:bg-[#0c1910] shrink-0"
             title="ระบบวิเคราะห์หลุมระเบิด 360°"
           >
-            <Target className="w-3.5 h-3.5 text-orange-400" />
+            <Target className="w-3.5 h-3.5" />
             <span>วิเคราะห์หลุมระเบิด</span>
           </button>
         </div>
