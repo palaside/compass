@@ -101,20 +101,21 @@ export function TopNavigationBar({
               </button>
             );
           })}
-        </div>
-
-        {/* Right: Crater Analysis Button */}
-        <div className="hidden md:flex items-center gap-2">
           <button
             type="button"
-            onClick={onOpenCraterAnalysis}
-            className="px-2.5 py-1.5 bg-orange-950/80 hover:bg-orange-900 text-orange-200 border border-orange-600/70 rounded-lg text-xs font-bold flex items-center gap-1 shadow-md transition-colors"
+            onClick={() => {
+              onOpenCraterAnalysis();
+              playTacticalClick(soundEnabled);
+            }}
+            className="px-2 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all text-gray-400 hover:text-gray-200 hover:bg-[#0c1910]"
             title="ระบบวิเคราะห์หลุมระเบิด 360°"
           >
-            <Target className="w-3.5 h-3.5 text-orange-400" />
-            <span>วิเคราะห์หลุมระเบิด</span>
+            <Target className="w-3.5 h-3.5" />
+            <span className="truncate">วิเคราะห์หลุมระเบิด</span>
           </button>
         </div>
+
+
 
       </div>
     </header>
