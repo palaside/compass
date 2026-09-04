@@ -63,22 +63,22 @@ export function roundTo5(val: number): number {
   return Math.round(val / 5) * 5;
 }
 
-// Calculate stadia distance from Angle ก. (in mils) -> R = 2000 / angleA (default = 100m)
+// Calculate stadia distance from Angle ก. (in mils) -> R = 2037.2 / angleA (default = 100m)
 export function calcDistanceFormAngleA(angleA: number): number {
   if (angleA <= 0) return 100;
-  const rawDist = 2000 / angleA;
+  const rawDist = 2037.2 / angleA;
   return Math.round(rawDist * 10) / 10;
 }
 
 const LOCAL_STORAGE_KEY = 'artillery_fdc_report_state_v2';
 
 const INITIAL_GUNS: GunInput[] = [
-  { id: 1, name: 'หมู่ 1', azimuthFromCircle: 2150, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 42, maskDistance: 820 },
-  { id: 2, name: 'หมู่ 2', azimuthFromCircle: 2280, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 48, maskDistance: 750 },
-  { id: 3, name: 'หมู่ 3', azimuthFromCircle: 2400, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 45, maskDistance: 800 },
-  { id: 4, name: 'หมู่ 4', azimuthFromCircle: 2520, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 50, maskDistance: 700 },
-  { id: 5, name: 'หมู่ 5', azimuthFromCircle: 2640, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 55, maskDistance: 650 },
-  { id: 6, name: 'หมู่ 6', azimuthFromCircle: 2760, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 52, maskDistance: 680 },
+  { id: 1, name: 'หมู่ 1', azimuthFromCircle: 2760, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 42, maskDistance: 820 },
+  { id: 2, name: 'หมู่ 2', azimuthFromCircle: 2640, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 48, maskDistance: 750 },
+  { id: 3, name: 'หมู่ 3', azimuthFromCircle: 2520, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 45, maskDistance: 800 },
+  { id: 4, name: 'หมู่ 4', azimuthFromCircle: 2400, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 50, maskDistance: 700 },
+  { id: 5, name: 'หมู่ 5', azimuthFromCircle: 2280, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 55, maskDistance: 650 },
+  { id: 6, name: 'หมู่ 6', azimuthFromCircle: 2150, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 52, maskDistance: 680 },
 ];
 
 export function ArtilleryReportView({
@@ -140,7 +140,7 @@ export function ArtilleryReportView({
     savedState?.numSquads ?? 6
   );
   const [baseGunId, setBaseGunId] = useState<number>(
-    savedState?.baseGunId ?? 3
+    savedState?.baseGunId ?? 1
   );
 
   // Battery Center Alignment Mode: 'ON_BC' (ทับ ศก.ร้อย), 'DISPLACED_BC' (คลาด ศก.ร้อย)
@@ -287,7 +287,12 @@ export function ArtilleryReportView({
 
       // Round all meters to full 5m (ปัดเต็ม 5 ม.)
       let lateralDisplacement = roundTo5(dX_rot);
-      const rangeDisplacement = roundTo5(dY_rot);
+      let rangeDisplacement = roundTo5(dY_rot);
+      // Apply alternating front/back (zig-zag) for range displacement, except base gun
+      if (gun.id !== baseGunId) {
+        const sign = gun.id % 2 === 1 ? 1 : -1; // odd id = front (+), even = back (-)
+        rangeDisplacement = Math.abs(rangeDisplacement) * sign;
+      }
 
       // กฎการจัดวางตำแหน่งปืนคลาดทางข้าง (ซ้าย/ขวา) ตามลักษณะ ศก.ร้อย:
       if (batteryAlignmentMode === 'ON_BC') {
@@ -310,11 +315,12 @@ export function ArtilleryReportView({
 
       // Azimuth from BC to this Gun in mils (0 - 6400)
       // Rule 6: หากมีเศษทศนิยม ปัดเพิ่มเต็ม 1 มิล (Math.ceil)
+      // Note: Artillery expects the azimuth FROM the Gun TO the Battery Center (Back Azimuth)
       let bcAzimuthMils = 0;
       if (gun.id === baseGunId || bcDirectDist < 0.1) {
         bcAzimuthMils = 0;
       } else {
-        const angleDeg = (Math.atan2(dX_raw, dY_raw) * 180) / Math.PI;
+        const angleDeg = (Math.atan2(-dX_raw, -dY_raw) * 180) / Math.PI;
         const rawMils = (angleDeg * 6400) / 360;
         const normalizedMils = ((rawMils % 6400) + 6400) % 6400;
         bcAzimuthMils = Math.ceil(normalizedMils) % 6400;
@@ -473,12 +479,12 @@ export function ArtilleryReportView({
       setSelectedChargeNum(5);
       setCurrentCommandQE(295);
       setGuns([
-        { id: 1, name: 'หมู่ 1', azimuthFromCircle: 2150, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 42, maskDistance: 820 },
-        { id: 2, name: 'หมู่ 2', azimuthFromCircle: 2280, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 48, maskDistance: 750 },
-        { id: 3, name: 'หมู่ 3', azimuthFromCircle: 2400, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 45, maskDistance: 800 },
-        { id: 4, name: 'หมู่ 4', azimuthFromCircle: 2520, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 50, maskDistance: 700 },
-        { id: 5, name: 'หมู่ 5', azimuthFromCircle: 2640, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 55, maskDistance: 650 },
-        { id: 6, name: 'หมู่ 6', azimuthFromCircle: 2760, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 52, maskDistance: 680 },
+        { id: 1, name: 'หมู่ 1', azimuthFromCircle: 2760, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 42, maskDistance: 820 },
+        { id: 2, name: 'หมู่ 2', azimuthFromCircle: 2640, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 48, maskDistance: 750 },
+        { id: 3, name: 'หมู่ 3', azimuthFromCircle: 2520, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 45, maskDistance: 800 },
+        { id: 4, name: 'หมู่ 4', azimuthFromCircle: 2400, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 50, maskDistance: 700 },
+        { id: 5, name: 'หมู่ 5', azimuthFromCircle: 2280, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 55, maskDistance: 650 },
+        { id: 6, name: 'หมู่ 6', azimuthFromCircle: 2150, angleAFromCircle: 20, calculatedDistance: 100, maskAngle: 52, maskDistance: 680 },
       ]);
     } else if (presetType === 'DISPERSED_105') {
       handleUpdateDirectionOfFire(1800);
@@ -800,7 +806,11 @@ ${displacementResults
                     <Compass className="w-3.5 h-3.5" />
                     ทิศทางยิงหลัก (DOF)
                   </span>
-                  <span className="text-[10px] text-emerald-400 font-medium">เชื่อมต่อเข็มทิศ</span>
+                   <button type="button"
+                     onClick={() => handleUpdateDirectionOfFire(camera1Angle)}
+                     className="text-[10px] text-emerald-400 font-medium cursor-pointer underline">
+                     เชื่อมต่อเข็มทิศ
+                   </button>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
@@ -1262,48 +1272,32 @@ ${displacementResults
               <div className="relative w-full max-w-[460px] aspect-square flex items-center justify-center my-4">
                 <svg viewBox="-230 -230 460 460" className="w-full h-full overflow-visible">
                   <defs>
-                    {/* Grid Pattern for M17 (20m grid) */}
-                    <pattern id="m17GridSmall" width="18" height="18" patternUnits="userSpaceOnUse">
-                      <path d="M 18 0 L 0 0 0 18" fill="none" stroke="#14331b" strokeWidth="0.5" />
-                    </pattern>
-                    <pattern id="m17GridLarge" width="90" height="90" patternUnits="userSpaceOnUse">
-                      <rect width="90" height="90" fill="url(#m17GridSmall)" />
-                      <path d="M 90 0 L 0 0 0 90" fill="none" stroke="#1f4e2b" strokeWidth="0.9" />
-                    </pattern>
                     <marker id="m17ArrowGreen" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 0 L 10 5 L 0 10 z" fill="#00fc00" />
                     </marker>
+                    <clipPath id="m17BaseClip">
+                      <circle cx="0" cy="0" r="215" />
+                    </clipPath>
                     <clipPath id="m17DiscClip">
                       <circle cx="0" cy="0" r="210" />
                     </clipPath>
                   </defs>
 
-                  {/* 1. M17 Base Plate Background */}
-                  <circle cx="0" cy="0" r="215" fill="#030c06" stroke="#255231" strokeWidth="2" />
-                  
-                  {/* Grid Lines inside Disc */}
-                  <rect x="-210" y="-210" width="420" height="420" fill="url(#m17GridLarge)" clipPath="url(#m17DiscClip)" />
-
-                  {/* 2. Authentic Protractor Disc Scale (Outer NATO 6400 mils & Inner 0-32 Red Semicircle) */}
-                  <ArtilleryProtractorDiscGroup
-                    radius={210}
-                    theme="military-printed"
-                    showOuterScale={true}
-                    showInnerRedScale={true}
+                  {/* 1. Realistic Base Plate (แผ่นล่าง) */}
+                  <image 
+                    href="/แผ่นล่าง.jpg" 
+                    x="-230" y="-230" width="460" height="460" 
+                    preserveAspectRatio="xMidYMid meet" 
+                    clipPath="url(#m17BaseClip)" 
                   />
 
-                  {/* 3. Concentric Distance Rings (20m, 40m, 60m, 80m, 100m) */}
-                  {[20, 40, 60, 80, 100].map((dist) => {
-                    const r = dist * 1.5; // Scale: 1.5px per meter
-                    return (
-                      <g key={`m17-dist-ring-${dist}`}>
-                        <circle cx="0" cy="0" r={r} fill="none" stroke="#1d4825" strokeWidth="0.9" strokeDasharray="3,3" />
-                        <text x={r + 2} y="-3" fill="#4ade80" fontSize="7.5" fontWeight="bold" fillOpacity="0.7">
-                          {dist}m
-                        </text>
-                      </g>
-                    );
-                  })}
+                  {/* 2. Realistic Top Disc (แผ่นบน) */}
+                  <image 
+                    href="/แผ่นบน.png" 
+                    x="-230" y="-230" width="460" height="460" 
+                    preserveAspectRatio="xMidYMid meet"
+                    clipPath="url(#m17DiscClip)"
+                  />
 
                   {/* 4. Direction of Fire (LOF Vector pointing forward along DOF angle) */}
                   <g transform={`rotate(${(directionOfFire * 360) / 6400})`}>
